@@ -34,3 +34,14 @@ class Terrain:
                 if isinstance(space, FreeSoil):
                     spaces.append((nx,ny))
         return spaces
+    
+    #def imprimir(self):
+    #    print("    " + " ".join(f"{x:2}" for x in range(self._largura)))  # Cabeçalho x
+    #    for y, linha in enumerate(self._grade):
+    #        print(f"{y:2} | " + " ".join([
+    #            "R" if isinstance(e, Raiz) else
+    #            "X" if isinstance(e, Obstaculo) else
+    #            "." for e in linha
+    #        ]))
+    #    print()
+    # Função para debug; ver a grid visualemente no terminal !
