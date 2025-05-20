@@ -1,6 +1,8 @@
 from models import FreeSoil, Obstacle, Root
+import json
+from mixins import SerializableMixin
 
-class Terrain:
+class Terrain(SerializableMixin):
 
     def __init__(self, width, height):
         self._width = width
@@ -45,3 +47,50 @@ class Terrain:
     #        ]))
     #    print()
     # Função para debug; ver a grid visualemente no terminal !
+
+    def to_dict(self):
+        data = {
+            "height": self._height,
+            "width": self._width,
+            "grid": []
+        }
+
+        for line in self._grid:
+            serializada = []
+            for element in line:
+                serializada.append({
+                    "type": element.type(),
+                    "x": element._x,
+                    "y": element._y
+                })
+            data["grid"].append(serializada)
+        return data
+    
+    def load_json(self,caminho):
+        from models import FreeSoil, Obstacle, Root
+
+        with open(caminho, "r") as f:
+            data = json.load(f)
+
+        self._height = data["height"]
+        self._width = data["width"]
+        self._grid = []
+        self._roots = []
+
+        for line_json in data["grid"]:
+            line = []
+            for element_json in line_json:
+                type = element_json["type"]
+                x = element_json["x"]
+                y = element_json["y"]
+
+                if type == "soil":
+                    line.append(FreeSoil(x,y))
+                elif type == "root":
+                    root = Root(x,y)
+                    line.append(Root(x,y))
+                    self._roots.append(root)
+                elif type == "obstacle":
+                    line.append(Obstacle(x,y))
+
+            self._grid.append(line)

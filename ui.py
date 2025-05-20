@@ -3,6 +3,7 @@ from tkinter import messagebox
 from terrain import Terrain
 from simulator import Simulator
 import json
+import os
 
 class Interface:
 
@@ -42,6 +43,9 @@ class Interface:
         self.button_save = tk.Button(button_div, text="Salvar em JSON", command=self.save)
         self.button_save.grid(row=0, column=1,padx=5)
 
+        self.button_load = tk.Button(button_div, text="Carregar JSON", command=self.load)
+        self.button_load.grid(row=0,column=2,padx=5)
+
     def toggle(self,x,y):
         element = self.terrain.get_element(x,y)
         from models import FreeSoil, Root, Obstacle
@@ -80,8 +84,31 @@ class Interface:
                 self.buttons[y][x].config(bg = color)
 
     def save(self):
-        data = self.terrain.serializar()
-        with open("state_terrain.json", "w") as f:
-            json.dump(data, f, indent=4)
-        messagebox.showinfo("Salvo","Terreno salvo em state_terrain.json")    
+        os.makedirs("data", exist_ok=True)
+        self.terrain.to_json("data/state_terrain.json")
+        messagebox.showinfo("Salvo","Terreno salvo em state_terrain.json")   
+
+    def load(self):
+        self.terrain.load_json("data/state_terrain.json") 
+        self.sim = Simulator(self.terrain)
+
+        self.width = self.terrain._width
+        self.heigth = self.terrain._height
+
+        for widget in self.grid_div.winfo_children():
+            widget.destroy()
+
+        self.buttons = []
+        for y in range(self.heigth):
+            line = []
+            for x in range(self.width):
+                button = tk.Button(self.grid_div, width=3, height=1,
+                                command=lambda x=x, y=y: self.toggle(x, y))
+                button.grid(row=y, column=x)
+                line.append(button)
+            self.buttons.append(line)
+
+        self.refresh()
+        self.steps_text.config(text = "Passos: 0")
+        messagebox.showinfo("Carregado","Terreno carregado com sucesso!")
       
