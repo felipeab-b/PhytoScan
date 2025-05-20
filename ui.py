@@ -61,7 +61,7 @@ class Interface:
 
     def run_step(self):
         grow = self.sim.step()
-        self.steps_text.config(text=f"Passos: {self.sim.step}")
+        self.steps_text.config(text=f"Passos: {self.sim.steps}")
         self.refresh()
 
         if not grow:
