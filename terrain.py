@@ -1,8 +1,9 @@
 from models import FreeSoil, Obstacle, Root
+from interface import ITerrain
 import json
 from mixins import SerializableMixin
 
-class Terrain(SerializableMixin):
+class Terrain(SerializableMixin, ITerrain):
 
     def __init__(self, width, height):
         self._width = width

@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import messagebox
 from terrain import Terrain
 from simulator import Simulator
-import json
 import os
 
 class Interface:

@@ -1,9 +1,9 @@
-from terrain import Terrain
+from interface import ITerrain
 import random
 
 class Simulator:
 
-    def __init__(self,terrain):
+    def __init__(self,terrain:ITerrain):
         self.terrain = terrain
         self.steps = 0
 
